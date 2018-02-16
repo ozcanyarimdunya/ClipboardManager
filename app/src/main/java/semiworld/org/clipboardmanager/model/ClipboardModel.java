@@ -42,7 +42,7 @@ public class ClipboardModel extends BaseModel {
     @Override
     public String toString() {
         if (TextUtils.isEmpty(text) || TextUtils.isEmpty(String.valueOf(date)))
-            return "<ClipboardModel{text=, date=}>";
-        return "<ClipboardModel{text=" + text + ", date=" + date + "}>";
+            return "<ClipboardModel(text=, date=)>";
+        return "<ClipboardModel(text=" + text + ", date=" + date + ")>";
     }
 }

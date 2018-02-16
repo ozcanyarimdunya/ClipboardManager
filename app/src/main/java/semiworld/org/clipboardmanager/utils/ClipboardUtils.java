@@ -11,7 +11,7 @@ import android.util.Log;
  */
 
 public class ClipboardUtils {
-    private static final String TAG = "HUAWEI";
+    private static final String TAG = "LOGGING";
     private ClipboardManager clipboard;
 
     public ClipboardUtils(ClipboardManager clipboard) {

@@ -15,7 +15,7 @@ import semiworld.org.clipboardmanager.utils.ClipboardUtils;
  */
 
 public class ClipboardService extends Service {
-    private static final String TAG = "HUAWEI";
+    private static final String TAG = "LOGGING";
 
     public ClipboardService() {
         Log.d(TAG, "ClipboardService:Constructor");
