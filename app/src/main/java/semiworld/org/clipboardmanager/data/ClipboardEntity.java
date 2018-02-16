@@ -1,4 +1,4 @@
-package semiworld.org.clipboardmanager.service;
+package semiworld.org.clipboardmanager.data;
 
 import android.text.TextUtils;
 
