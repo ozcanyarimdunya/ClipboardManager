@@ -1,84 +1,73 @@
 package semiworld.org.clipboardmanager.data
 
 import android.text.TextUtils
+import android.util.Log
+import com.raizlabs.android.dbflow.sql.language.Select
+import java.util.*
 
-import com.raizlabs.android.dbflow.sql.language.SQLite
-import java.util.UUID
-
-import semiworld.org.clipboardmanager.model.ClipboardModel
-import semiworld.org.clipboardmanager.model.ClipboardModel_Table
 
 /**
  * Author Ozcan YARIMDUNYA
  * Created at 16.02.2018.
  */
 
-object ClipboardEntity {
-    private val TAG = "LOGGING"
+object ClipboardEntity : BaseEntity {
+    private const val mTAG = "LOGGING"
 
-    val all: List<ClipboardModel>
-        get() = SQLite.select()
-                .from<ClipboardModel>(ClipboardModel::class.java!!)
-                .orderBy(ClipboardModel_Table.date, false)
-                .queryList()
-
-    fun getFirstOne(uuid: UUID): ClipboardModel? {
-        return SQLite.select()
-                .from<ClipboardModel>(ClipboardModel::class.java!!)
-                .where(ClipboardModel_Table.uuid.eq(uuid))
-                .querySingle()
+    fun addToDatabase(text: String) {
+        val model = this._get(text)
+        if (model != null) {
+            if (model.exists()) {
+                this._update(model, text)
+            }
+        } else {
+            this._create(text)
+        }
+        Log.d(mTAG, "DB:model:$model")
     }
 
-    fun getFirstOne(text: String): ClipboardModel? {
-        return SQLite.select()
-                .from<ClipboardModel>(ClipboardModel::class.java!!)
+    override fun _get(text: String): ClipboardModel? {
+        return Select()
+                .from<ClipboardModel>(ClipboardModel::class.java)
                 .where(ClipboardModel_Table.text.eq(text))
                 .querySingle()
     }
 
-    fun getLimited(limit: Int): List<ClipboardModel> {
-        return SQLite.select()
-                .from<ClipboardModel>(ClipboardModel::class.java!!)
+    override fun _getAll(): MutableList<ClipboardModel> {
+        return Select()
+                .from(ClipboardModel::class.java)
+                .orderBy(ClipboardModel_Table.date, false)
+                .queryList()
+    }
+
+    override fun _getInLimit(limit: Int): MutableList<ClipboardModel> {
+        return Select()
+                .from<ClipboardModel>(ClipboardModel::class.java)
                 .orderBy(ClipboardModel_Table.date, false)
                 .limit(limit)
                 .queryList()
     }
 
-    fun create(text: String) {
+    override fun _create(text: String) {
         if (TextUtils.isEmpty(text)) {
             return
         }
-        ClipboardModel(text).insert()
-    }
-
-    fun create(model: ClipboardModel?) {
-        if (model == null || TextUtils.isEmpty(model.text)) {
-            return
-        }
+        val model = ClipboardModel(text = text)
         model.insert()
     }
 
-    fun update(oldText: String, newText: String) {
-        if (TextUtils.isEmpty(newText)) {
-            return
-        }
-        ClipboardEntity.getFirstOne(oldText)!!.delete()
-        ClipboardModel(newText).insert()
-    }
-
-    fun update(model: ClipboardModel, text: String) {
+    override fun _update(model: ClipboardModel, text: String) {
         if (TextUtils.isEmpty(text)) {
             return
         }
-        model.delete()
-        ClipboardModel(text).insert()
+
+        model.text = text
+        model.date = Date()
+        model.update()
     }
 
-    fun delete(text: String) {
-        ClipboardEntity.getFirstOne(text)!!.delete()
-    }
-
-    fun delete(model: ClipboardModel) {
-        model.delete()
+    override fun _delete(text: String) {
+        val model = this._get(text)
+        model?.delete()
     }
 }
