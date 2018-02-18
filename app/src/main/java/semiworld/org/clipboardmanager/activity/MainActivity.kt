@@ -21,5 +21,7 @@ class MainActivity : AppCompatActivity() {
         startService(intent)
 
         Log.d(mTAG, "MainActivity:onCreate")
+
+         TODO("Create UI, Widget, Adapter")
     }
 }

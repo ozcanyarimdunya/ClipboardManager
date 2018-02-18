@@ -15,32 +15,32 @@ object ClipboardEntity : BaseEntity {
     private const val mTAG = "LOGGING"
 
     fun addToDatabase(text: String) {
-        val model = this._get(text)
+        val model = this.getClipboardByText(text)
         if (model != null) {
             if (model.exists()) {
-                this._update(model, text)
+                this.updateClipboard(model, text)
             }
         } else {
-            this._create(text)
+            this.createClipboard(text)
         }
         Log.d(mTAG, "DB:model:$model")
     }
 
-    override fun _get(text: String): ClipboardModel? {
+    override fun getClipboardByText(text: String): ClipboardModel? {
         return Select()
                 .from<ClipboardModel>(ClipboardModel::class.java)
                 .where(ClipboardModel_Table.text.eq(text))
                 .querySingle()
     }
 
-    override fun _getAll(): MutableList<ClipboardModel> {
+    override fun getClipboardList(): MutableList<ClipboardModel> {
         return Select()
                 .from(ClipboardModel::class.java)
                 .orderBy(ClipboardModel_Table.date, false)
                 .queryList()
     }
 
-    override fun _getInLimit(limit: Int): MutableList<ClipboardModel> {
+    override fun getClipboardListWithLimit(limit: Int): MutableList<ClipboardModel> {
         return Select()
                 .from<ClipboardModel>(ClipboardModel::class.java)
                 .orderBy(ClipboardModel_Table.date, false)
@@ -48,7 +48,7 @@ object ClipboardEntity : BaseEntity {
                 .queryList()
     }
 
-    override fun _create(text: String) {
+    override fun createClipboard(text: String) {
         if (TextUtils.isEmpty(text)) {
             return
         }
@@ -56,7 +56,7 @@ object ClipboardEntity : BaseEntity {
         model.insert()
     }
 
-    override fun _update(model: ClipboardModel, text: String) {
+    override fun updateClipboard(model: ClipboardModel, text: String) {
         if (TextUtils.isEmpty(text)) {
             return
         }
@@ -66,8 +66,8 @@ object ClipboardEntity : BaseEntity {
         model.update()
     }
 
-    override fun _delete(text: String) {
-        val model = this._get(text)
+    override fun deleteClipboard(text: String) {
+        val model = this.getClipboardByText(text)
         model?.delete()
     }
 }

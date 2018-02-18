@@ -7,15 +7,15 @@ package semiworld.org.clipboardmanager.data
 
 interface BaseEntity {
 
-    fun _get(text: String): ClipboardModel?
+    fun getClipboardByText(text: String): ClipboardModel?
 
-    fun _getAll(): MutableList<ClipboardModel>
+    fun getClipboardList(): MutableList<ClipboardModel>
 
-    fun _getInLimit(limit: Int): MutableList<ClipboardModel>
+    fun getClipboardListWithLimit(limit: Int): MutableList<ClipboardModel>
 
-    fun _create(text: String)
+    fun createClipboard(text: String)
 
-    fun _update(model: ClipboardModel, text: String)
+    fun updateClipboard(model: ClipboardModel, text: String)
 
-    fun _delete(text: String)
+    fun deleteClipboard(text: String)
 }
